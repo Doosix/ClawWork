@@ -2,21 +2,24 @@
 
 echo "Starting ClawWork..."
 
-# ---- Start Backend (FastAPI) ----
-echo "Starting backend API..."
+# ---------- Backend ----------
+echo "Starting backend..."
 cd /app/livebench/api
 python3 server.py &
 
-# give backend time to boot
 sleep 6
 
-# ---- Start Frontend (NextJS production) ----
+# ---------- Frontend ----------
 echo "Starting frontend..."
 cd /app/frontend
 
-# production mode (important for servers)
-npm run build >/dev/null 2>&1 || true
-npm run start
+# install if first run
+npm install
 
-# keep container alive
+# build UI
+npm run build
+
+# serve dashboard (THIS is the correct one)
+npm run preview -- --host 0.0.0.0 --port 3000
+
 wait
