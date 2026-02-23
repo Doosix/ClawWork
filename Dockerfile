@@ -1,18 +1,22 @@
-FROM node:20-bullseye
+# ---- Base system ----
+FROM python:3.11-slim
 
-# install python and build tools
-RUN apt-get update && apt-get install -y python3 python3-pip git build-essential
+# install nodejs (for frontend build)
+RUN apt-get update && apt-get install -y curl git build-essential
 
+# install Node 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+
+# workdir
 WORKDIR /app
 COPY . .
 
-# upgrade pip first (VERY IMPORTANT)
-RUN pip3 install --upgrade pip
+# python dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# install backend requirements
-RUN pip3 install -r requirements.txt
-
-# build frontend
+# frontend build
 WORKDIR /app/frontend
 RUN npm install
 RUN npm run build
